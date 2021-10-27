@@ -6,8 +6,8 @@ import QtQuick3D
 import QtQuick3D.Helpers
 
 Window {
-    width: 640
-    height: 480
+    width: 1280
+    height: 1024
     visible: true
     title: qsTr("Hello World")
 
@@ -25,20 +25,25 @@ Window {
         id: view
         anchors.fill: parent
 
+        antialiasing: true
+
         // все нажатия клавиш отправляем на парсинг в отдельную функцию
         Keys.onPressed: (event)=> { view.parseKeys( event ) };
 
         //! [environment]
-//        environment: SceneEnvironment {
-//            clearColor: "skyblue"
-//            backgroundMode: SceneEnvironment.Color
-//        }
+        environment: SceneEnvironment {
+            clearColor: "skyblue"
+            backgroundMode: SceneEnvironment.Color
+
+             antialiasingMode: SceneEnvironment.SSAA
+//             antialiasingQuality: SceneEnvironment.VeryHigh
+        }
         //! [environment]
 
         //! [camera]
         PerspectiveCamera {
             id: camera
-            position: Qt.vector3d(0, 200, 600)
+            position: Qt.vector3d(100, 100, 800)
         }
         //! [camera]
 
@@ -48,19 +53,52 @@ Window {
 
         //! [objects]
         Model {
-//            position: Qt.vector3d(0, 0, 0)
+            id: whiteModel
+            position: Qt.vector3d( 0, 0, 0 )
             source: "#Cylinder"
-            scale: Qt.vector3d(0.1, 2, 0.1)
-//            eulerRotation: Qt.vector3d(100, 100, 20)
+            scale: Qt.vector3d(0.03, 4, 0.03)
+            eulerRotation: Qt.vector3d(0, 0, 90) // Rotation order is assumed to be ZXY
             materials: [ DefaultMaterial {
-                    diffuseColor: "yellow"
+                    diffuseColor: "white"
                 }
             ]
         }
 
-        AxisHelper {
-//            enableAxisLines: false
+        Model {
+            id: purpleModel
+            position: Qt.vector3d(-200, 0, 0)
+            source: "#Cylinder"
+            scale: Qt.vector3d(0.05, 0.01, 0.05)
+            eulerRotation: Qt.vector3d(0, 0, 90) // Rotation order is assumed to be ZXY
+            materials: [ DefaultMaterial {
+                    diffuseColor: "purple"
+                }
+            ]
+        }
 
+        Timer {
+            property double scale: 0.01
+            interval: 300; running: true; repeat: true
+            onTriggered: {
+                purpleModel.scale = Qt.vector3d( 0.05, (scale = scale + 0.01), 0.05 )
+                purpleModel.x = purpleModel.x + 0.5
+            }
+        }
+
+
+//        Model {
+//            position: Qt.vector3d(0, 0, 0)
+//            source: "#Cylinder"
+//            scale: Qt.vector3d(0.1, 0.5, 0.1)
+//            eulerRotation: Qt.vector3d(0, 0, 90) // // Rotation order is assumed to be ZXY
+//            materials: [ DefaultMaterial {
+//                    diffuseColor: "white"
+//                }
+//            ]
+//        }
+
+        AxisHelper {
+            enableAxisLines: false
         }
 
 //        Model {
