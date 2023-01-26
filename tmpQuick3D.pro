@@ -1,6 +1,8 @@
-QT += quick quick3d
+QT += quick widgets
+QT += quick3d # для работы с 3d в рабочей области
 
-CONFIG += c++17
+
+CONFIG += c++latest
 
 
 SOURCES += \
