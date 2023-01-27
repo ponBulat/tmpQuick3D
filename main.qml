@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 1280
     height: 1024
     visible: true
-//    title: qsTr("Hello World")
+    title: qsTr("Hello World")
 
 
     Material.theme: Material.Dark
@@ -24,13 +24,14 @@ ApplicationWindow {
     //    }
 
 
-
-
     View3D {
         id: view
         anchors.fill: parent
 
         antialiasing: true
+
+//        camera: perCamera
+        camera: orthoCamera
 
         AxisHelper {
             enableXYGrid: true
@@ -51,14 +52,34 @@ ApplicationWindow {
 
         }
 
+//        OrbitCameraController {
+//            anchors.fill: parent
+
+////            origin: originPerNode
+////            camera: perCamera
+
+//            origin: originOrthoNode
+//            camera: orthoCamera
+//        }
 
         //! [camera]
-        OrthographicCamera {
-            id: orthoCamera
-//            position: Qt.vector3d(0, 200, 300)
-            z: 300
-//            eulerRotation.x: -30
+
+        Node {
+            id: originPerNode
+            PerspectiveCamera  {
+                id: perCamera
+                position: Qt.vector3d(100, 100, 600)
+            }
         }
+
+        Node {
+            id: originOrthoNode
+            OrthographicCamera {
+                id: orthoCamera
+                z: 100
+            }
+        }
+
         //! [camera]
 
         //! [light]
@@ -68,25 +89,33 @@ ApplicationWindow {
         //! [objects]
         Model {
             id: whiteModel
-//            position: Qt.vector3d( 0, 0, 0 )
-            source: "#Cylinder"
-//            scale: Qt.vector3d(0.03, 4, 0.03)
-//            eulerRotation: Qt.vector3d(0, 0, 90) // Rotation order is assumed to be ZXY
-
+            source: "#Cube"
+            materials: [
+                DefaultMaterial {
+                    lighting: PrincipledMaterial.NoLighting
+                    opacity: 0.3
+                    diffuseColor: "#4287f5"
+                }
+            ]
         }
 
         //! [objects]
-
     }
 
-    WasdController {
-        controlledObject: orthoCamera
+//    WasdController {
+//        controlledObject: orthoCamera
+////        controlledObject: perCamera
 
-    }
+//    }
+
+
 
     function wheelChanged( wheel ) {
 
 //        console.log( JSON.stringify( wheel ) )
+
+        orthoCamera.horizontalMagnification += wheel.angleDelta.y * 0.0005
+        orthoCamera.verticalMagnification  += wheel.angleDelta.y * 0.0005
 
 //        orthoCamera.x = wheel
 
