@@ -21,8 +21,6 @@ ApplicationWindow {
 
 
         Node {
-            readonly property real halfY: axisX.scale.y * 100 / 2
-
             Model {
                 id: axisX
                 source: "#Cylinder"
