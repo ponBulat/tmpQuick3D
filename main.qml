@@ -19,51 +19,6 @@ ApplicationWindow {
 
         antialiasing: true
 
-
-        Node {
-            Model {
-                id: axisX
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.02, 10, 0.02)
-                eulerRotation: Qt.vector3d(0, 0, 90)
-                position: Qt.vector3d(scale.y * 100/*размер ячейки*/ / 2, 0, 0)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: 'red'
-                        lighting: DefaultMaterial.NoLighting
-                    }
-                ]
-            }
-
-            Model {
-                id: axisY
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.02, 10, 0.02)
-                position: Qt.vector3d(0, scale.y * 100/*размер ячейки*/ / 2, 0)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: 'green'
-                        lighting: DefaultMaterial.NoLighting
-                    }
-                ]
-            }
-
-            Model {
-                id: axisZ
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.02, 10, 0.02)
-                eulerRotation: Qt.vector3d(90, 0, 0)
-                position: Qt.vector3d(0, 0, scale.y * 100/*размер ячейки*/ / 2)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: 'blue'
-                        lighting: DefaultMaterial.NoLighting
-                    }
-                ]
-            }
-        }
-
-
 //        Model {
 //            id: whiteModel
 ////            scale: Qt.vector3d(1, 1, 1)
@@ -95,8 +50,24 @@ ApplicationWindow {
         AxisHelper {
             enableXYGrid: true
             enableXZGrid: false
-            enableAxisLines: false
+//            enableAxisLines: false
             gridColor: "grey"
+        }
+
+        Model {
+            id: workFieldModel
+            scale: Qt.vector3d(100, 100, 0)
+            position: Qt.vector3d(100, 100, 0)
+            geometry: GridGeometry {
+                horizontalLines: 20
+                verticalLines: 20
+            }
+            materials: [
+                DefaultMaterial {
+                    diffuseColor: "gray"
+                    lighting: PrincipledMaterial.NoLighting
+                }
+            ]
         }
 
         WasdController {
