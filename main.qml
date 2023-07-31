@@ -1,121 +1,141 @@
 import QtQuick
+import QtQuick.Controls
+
 import QtQuick3D
 import QtQuick3D.Helpers
-import QtQuick.Controls
-import QtQuick.Controls.Material
+
+//import Qt3D.Input
+//import Qt3D.Render
 
 ApplicationWindow {
-    width: 1280
-    height: 1024
+    width: 640
+    height: 480
     visible: true
     title: qsTr("Hello World")
 
-
-    Material.theme: Material.Dark
-//    Material.accent: Material.Purple
-
-
-    //    MouseArea {
-    //        anchors.fill: parent
-    //        onPositionChanged: {
-    //            console.log( mouseX, mouseY ) // 320*381
-    //            camera.position = Qt.vector3d(0 + (mouseX - 320), 200 + (mouseY - 381 ), 600)
-    //        }
-    //    }
-
-
     View3D {
-        id: view
+        id: v3d
         anchors.fill: parent
 
         antialiasing: true
 
-//        camera: perCamera
-        camera: orthoCamera
+
+        Node {
+            readonly property real halfY: axisX.scale.y * 100 / 2
+
+            Model {
+                id: axisX
+                source: "#Cylinder"
+                scale: Qt.vector3d(0.02, 10, 0.02)
+                eulerRotation: Qt.vector3d(0, 0, 90)
+                position: Qt.vector3d(scale.y * 100/*размер ячейки*/ / 2, 0, 0)
+                materials: [
+                    DefaultMaterial {
+                        diffuseColor: 'red'
+                        lighting: DefaultMaterial.NoLighting
+                    }
+                ]
+            }
+
+            Model {
+                id: axisY
+                source: "#Cylinder"
+                scale: Qt.vector3d(0.02, 10, 0.02)
+                position: Qt.vector3d(0, scale.y * 100/*размер ячейки*/ / 2, 0)
+                materials: [
+                    DefaultMaterial {
+                        diffuseColor: 'green'
+                        lighting: DefaultMaterial.NoLighting
+                    }
+                ]
+            }
+
+            Model {
+                id: axisZ
+                source: "#Cylinder"
+                scale: Qt.vector3d(0.02, 10, 0.02)
+                eulerRotation: Qt.vector3d(90, 0, 0)
+                position: Qt.vector3d(0, 0, scale.y * 100/*размер ячейки*/ / 2)
+                materials: [
+                    DefaultMaterial {
+                        diffuseColor: 'blue'
+                        lighting: DefaultMaterial.NoLighting
+                    }
+                ]
+            }
+        }
+
+
+//        Model {
+//            id: whiteModel
+////            scale: Qt.vector3d(1, 1, 1)
+////            position: Qt.vector3d(50, 50, 10)
+
+//            geometry: HeightFieldGeometry {
+////                source:
+//            }
+
+//            pickable: true
+//            source: "#Cube"
+//            geometry: GridGeometry {
+//                horizontalLines: 50
+//                verticalLines: 50
+//            }
+
+//            materials: [
+//                DefaultMaterial {
+//                    lighting: DefaultMaterial.NoLighting
+//                    diffuseColor: "red"
+
+////                    lighting: PrincipledMaterial.NoLighting
+////                    opacity: 0.3
+////                    diffuseColor: "blue"
+//                }
+//            ]
+//        }
 
         AxisHelper {
             enableXYGrid: true
             enableXZGrid: false
+            enableAxisLines: false
             gridColor: "grey"
         }
 
-
-        MouseArea {
-            anchors.fill: parent
-
-            acceptedButtons: Qt.AllButtons
-
-            // mouse sensitivity
-            pressAndHoldInterval: 200 // default 800
-
-            onWheel: ( wheel ) => wheelChanged( wheel );
-
+        WasdController {
+//            controlledObject: orthoCamera
+            controlledObject: perCamera
         }
 
-//        OrbitCameraController {
-//            anchors.fill: parent
-
-////            origin: originPerNode
-////            camera: perCamera
-
-//            origin: originOrthoNode
-//            camera: orthoCamera
+//        ObjectPicker {
+//            hoverEnabled: true
+////            dragEnabled: true
+////            enabled: true
+//            onPressed: pick => console.log( 'dis: ' , JSON.stringify( pick.distance ) )
 //        }
 
-        //! [camera]
 
-        Node {
-            id: originPerNode
-            PerspectiveCamera  {
-                id: perCamera
-                position: Qt.vector3d(100, 100, 600)
-            }
+        PerspectiveCamera  {
+            id: perCamera
+            position: Qt.vector3d(100, 50, 300)
         }
 
-        Node {
-            id: originOrthoNode
-            OrthographicCamera {
-                id: orthoCamera
-                z: 100
-            }
+        DirectionalLight {
+//            position: Qt.vector3d(-500, 500, -100)
         }
-
-        //! [camera]
-
-        //! [light]
-//        DirectionalLight {}
-        //! [light]
-
-        //! [objects]
-        Model {
-            id: whiteModel
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    lighting: PrincipledMaterial.NoLighting
-                    opacity: 0.3
-                    diffuseColor: "#4287f5"
-                }
-            ]
-        }
-
-        //! [objects]
     }
 
-//    WasdController {
-//        controlledObject: orthoCamera
-////        controlledObject: perCamera
-
-//    }
+    DebugView {
+        source: v3d
+    }
 
 
 
-    function wheelChanged( wheel ) {
+//    function wheelChanged( wheel ) {
 
 //        console.log( JSON.stringify( wheel ) )
 
-        orthoCamera.horizontalMagnification += wheel.angleDelta.y * 0.0005
-        orthoCamera.verticalMagnification  += wheel.angleDelta.y * 0.0005
+//        orthoCamera.horizontalMagnification += wheel.angleDelta.y * 0.0005
+//        orthoCamera.verticalMagnification  += wheel.angleDelta.y * 0.0005
 
 //        orthoCamera.x = wheel
 
@@ -131,5 +151,5 @@ ApplicationWindow {
 //            }
 //        }
         //console.log(perspectiveCamera.pivot.z, perspectiveCamera.fieldOfView, scene3D.height);
-    }
+//    }
 }
